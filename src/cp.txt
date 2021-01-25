@@ -1,0 +1,116 @@
+
+//Create DB
+app.get('/createDB', (req, res) => {
+      console.log('Create Database');
+      let sql = 'CREATE DATABASE';
+
+      db.query(sql, (err, result) => {
+            if(err){
+                  
+                  throw err;
+            }
+            else{
+                  res.send('Database Created');
+            }
+      })
+})
+
+app.get('/createpostsTable', (req, res) => {
+      let sql = 'CREATE TABLE posts(id int AUTO_INCREMENT, title VARCHAR(255), body VARCHAR(255), PRIMARY KEY(id))';
+
+      db.query(sql, (err, result) => {
+            if(err){
+                  throw err;
+            }
+            else{
+                  res.send('Table Created');
+            }
+      })
+})
+
+app.get('/addPost', (req, res) => {
+      let post = {title : "Post One", body : "This is post number one"};
+      let sql = 'INSERT INTO posts SET ?';
+      let query = db.query(sql, post, (err, result) => {
+            if(err){
+                  throw err;
+            }
+            else{
+                  res.send('Data Inserted');
+            }
+      })
+})
+
+app.get('/getPosts', (req, res) => {
+      // let post = {title : "Post One", body : "This is post number one"};
+      let sql = 'SELECT * FROM posts';
+      let query = db.query(sql, (err, result) => {
+            if(err){
+                  throw err;
+            }
+            else{
+                  console.log('SQL Result', result);
+                  res.send('Posts Fetched...');
+            }
+      })
+})
+
+app.get('/getPost/:id', (req, res) => {
+      // let post = {title : "Post One", body : "This is post number one"};
+      let sql = `SELECT * FROM posts WHERE id = ${req.params.id}`;
+      let query = db.query(sql, (err, result) => {
+            if(err){
+                  throw err;
+            }
+            else{
+                  console.log('SQL Result', result);
+                  res.send('Posts Fetched...');
+            }
+      })
+})
+
+app.get('/updatePost/:id', (req, res) => {
+      // let post = {title : "Post One", body : "This is post number one"};
+      let newTitle = "Post Two";
+      let sql = `UPDATE posts SET title = "${newTitle}" WHERE id = ${req.params.id}`;
+      console.log('SQL Query', sql);
+      let query = db.query(sql, (err, result) => {
+            if(err){
+                  throw err;
+            }
+            else{
+                  console.log('SQL Result', result);
+                  res.send('Post Updated...');
+            }
+      })
+})
+
+app.get('/deletePost/:id', (req, res) => {
+      // let post = {title : "Post One", body : "This is post number one"};
+      let sql = `DELETE FROM posts WHERE id = ${req.params.id}`;
+      let query = db.query(sql, (err, result) => {
+            if(err){
+                  throw err;
+            }
+            else{
+                  console.log('SQL Result', result);
+                  res.send('Posts Deleted...');
+            }
+      })
+})
+
+ app.get('/getUsers/:name', (req, res) => {
+      // let post = {title : "Post One", body : "This is post number one"};
+      let sql = `SELECT d.*, u.* FROM departments AS d LEFT JOIN users AS u ON u.id = d.user_id WHERE d.department = "${req.params.name}"`;
+      let query = db.query(sql, (err, result) => {
+            if(err){
+                  throw err;
+            }
+            else{
+                  console.log('SQL Result', result);
+                  res.send('Users Fetched...');
+            }
+      })
+})
+
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '123456789';
